@@ -30,21 +30,10 @@ module.exports = function(grunt) {
 
     // Configuration to be run (and then tested).
     file_package: {
-      default_options: {
-        options: {
-        },
-        files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123']
-        }
-      },
-      custom_options: {
-        options: {
-          separator: ': ',
-          punctuation: ' !!!'
-        },
-        files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123']
-        }
+      demo:{
+        src:'test/fileslist/*.txt',
+        dest:'test/package/',
+        type:'.zip'
       }
     },
 
@@ -66,8 +55,9 @@ module.exports = function(grunt) {
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
   grunt.registerTask('test', ['clean', 'file_package', 'nodeunit']);
+  grunt.registerTask('package', ['file_package','nodeunit']);
 
   // By default, lint and run all tests.
-  grunt.registerTask('default', ['jshint', 'test']);
+ // grunt.registerTask('default', ['jshint', 'test']);
 
 };
