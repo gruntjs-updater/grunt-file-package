@@ -23,6 +23,26 @@ module.exports = function(grunt) {
     }
     grunt.log.writeln(this.target,this.data,'===');
 
+    //获取文件夹下所有文件
+    var srcpath=this.data.src;
+    if(srcpath  === '' && !srcpath){
+        grunt.log.error('src path error !');
+        return false;
+    }
+
+    this.files.forEach(function(f){
+        var src=f.src.filter(function(filepath){
+            if(!grunt.file.exists(filepath)){
+                grunt.log.warn('Source file '+ filepath + 'not found.');
+                return false;
+            }else{
+                return true;
+            }
+        }).map(function(filepath){
+            
+        });        
+    });
+
     // Merge task-specific and/or target-specific options with these defaults.
     // var options = this.options({
     //   punctuation: '.',
