@@ -9,9 +9,7 @@
 'use strict';
 
 module.exports = function(grunt) {
-
-  // Please see the Grunt documentation for more information regarding task
-  // creation: http://gruntjs.com/creating-tasks
+//files automatic make package and make zip
 
   grunt.registerMultiTask('file_package', 'files automatic package tools', function(arg1,arg2) {
     // grunt.log.write(this,'=-=-=-=-=-');
