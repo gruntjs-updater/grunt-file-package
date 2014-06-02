@@ -33,7 +33,8 @@ module.exports = function(grunt) {
       demo:{
         src:'test/fileslist/*.txt',
         dest:'test/package/',
-        type:'.zip'
+        type:'.zip',
+        sep:'/'
       }
     },
 

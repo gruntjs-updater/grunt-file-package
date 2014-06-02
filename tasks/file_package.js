@@ -8,9 +8,44 @@
 
 'use strict';
 
+var path=require('path');
+
 module.exports = function(grunt) {
 //files automatic make package and make zip
 
+    //get file name for path
+    var getFileName=function(sp){
+        var bname=path.basename(sp);
+        var extname=path.extname(bname);
+
+        return path.basename(bname,extname);
+    };
+    //整理文件内容
+    var filterFiles=function(filepath,newFileDir){
+        var fileContent=grunt.file.read(filepath);
+        var filesArr=fileContent.split('\n');
+        
+        filesArr.forEach(function(filepathitem){
+            var newfilepath=filepathitem.split('\\').join('/')
+            //if newfilepath is null or empty space
+            if(!newfilepath) return false;
+
+            if(grunt.file.exists(newfilepath)){
+                grunt.log.ok('Source file "'+ newfilepath + '" ok.');
+                grunt.file.copy(newfilepath,newFileDir,{process:function(){
+                    return true
+                }})
+            }else{
+                grunt.log.warn('Source file "'+ newfilepath + '" not found.');
+                return false;
+
+            }
+            
+
+            
+        });
+
+    }
 
 
   grunt.registerMultiTask('file_package', 'files automatic package tools', function(arg1,arg2) {
@@ -37,7 +72,7 @@ module.exports = function(grunt) {
         return false;
     }
     //if dest path not exists,create the path
-    if(grunt.file.exists(destpath)){
+    if(!grunt.file.exists(destpath)){
         grunt.file.mkdir(destpath);
     };
 
@@ -50,8 +85,12 @@ module.exports = function(grunt) {
                 return true;
             }
         }).map(function(filepath){
-            var fileContent=grunt.file.read(filepath);
-            console.log(fileContent)
+            var newpackagename=getFileName(filepath);
+            var newFileDir=path.join(destpath,newpackagename);
+            grunt.file.exists(newFileDir)?'':grunt.file.mkdir(newFileDir);
+            
+            filterFiles(filepath,newFileDir);
+            // console.log(fileContent)
         });        
     });
 
