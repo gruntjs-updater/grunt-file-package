@@ -11,15 +11,18 @@
 module.exports = function(grunt) {
 //files automatic make package and make zip
 
+
+
   grunt.registerMultiTask('file_package', 'files automatic package tools', function(arg1,arg2) {
     // grunt.log.write(this,'=-=-=-=-=-');
     // console.log(this);
-    if(arguments.length === 0){
-      grunt.log.writeln(this.name + ", no args");
-    }else{
-      grunt.log.writeln(this.name,arg1,arg2);
-    }
-    grunt.log.writeln(this.target,this.data,'===');
+    // if(arguments.length === 0){
+    //   grunt.log.writeln(this.name + ", no args");
+    // }else{
+    //   grunt.log.writeln(this.name,arg1,arg2);
+    // }
+    // grunt.log.writeln(this.target,this.data,'===');
+
 
     //获取文件夹下所有文件
     var srcpath=this.data.src;
@@ -27,6 +30,16 @@ module.exports = function(grunt) {
         grunt.log.error('src path error !');
         return false;
     }
+    //dest exists
+    var destpath=this.data.dest;
+    if(!destpath){
+        grunt.log.error('dest path not exists');
+        return false;
+    }
+    //if dest path not exists,create the path
+    if(grunt.file.exists(destpath)){
+        grunt.file.mkdir(destpath);
+    };
 
     this.files.forEach(function(f){
         var src=f.src.filter(function(filepath){
@@ -37,7 +50,8 @@ module.exports = function(grunt) {
                 return true;
             }
         }).map(function(filepath){
-            
+            var fileContent=grunt.file.read(filepath);
+            console.log(fileContent)
         });        
     });
 
