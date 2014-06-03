@@ -9,6 +9,7 @@
 'use strict';
 
 var path=require('path');
+var fs=require('fs');
 
 module.exports = function(grunt) {
 //files automatic make package and make zip
@@ -32,9 +33,11 @@ module.exports = function(grunt) {
 
             if(grunt.file.exists(newfilepath)){
                 grunt.log.ok('Source file "'+ newfilepath + '" ok.');
-                grunt.file.copy(newfilepath,newFileDir,{process:function(){
-                    return true
-                }})
+                // grunt.file.copy(newfilepath,newFileDir,{process:function(){
+                //     return true
+                // }})
+        console.log(newfilepath,newFileDir)
+                fs.renameSync(newfilepath,newFileDir);
             }else{
                 grunt.log.warn('Source file "'+ newfilepath + '" not found.');
                 return false;
