@@ -10,36 +10,40 @@
 
 var path=require('path');
 var fs=require('fs');
+var zip=require("node-zip")();
 
 module.exports = function(grunt) {
 //files automatic make package and make zip
 
     //get file name for path
     var getFileName=function(sp){
-        var bname=path.basename(sp);
-        var extname=path.extname(bname);
+        //var bname=path.basename(sp);
+        var extname=path.extname(sp);
 
-        return path.basename(bname,extname);
+        return path.basename(sp,extname);
     };
     //整理文件内容
     var filterFiles=function(filepath,newFileDir){
+        //读取文件内容
         var fileContent=grunt.file.read(filepath);
+        //将每行内容作为一条记录装到数组中
         var filesArr=fileContent.split('\n');
-        
+        //遍历每行文件名
         filesArr.forEach(function(filepathitem){
-            var newfilepath=filepathitem.split('\\').join('/')
-            //if newfilepath is null or empty space
-            if(!newfilepath) return false;
+            var srcfilepath=filepathitem.split('\\').join('/')
+            //if srcfilepath is null or empty space
+            if(!srcfilepath) return false;
 
-            if(grunt.file.exists(newfilepath)){
-                grunt.log.ok('Source file "'+ newfilepath + '" ok.');
-                // grunt.file.copy(newfilepath,newFileDir,{process:function(){
-                //     return true
-                // }})
-        console.log(newfilepath,newFileDir)
-                fs.renameSync(newfilepath,newFileDir);
+            if(grunt.file.exists(srcfilepath)){
+                grunt.log.ok('Source file "'+ srcfilepath + '" ok.');
+                var newFilePath=path.join(newFileDir,srcfilepath)
+                grunt.file.copy(srcfilepath,newFilePath,{process:function(){
+                    return true
+                }})
+             
+              
             }else{
-                grunt.log.warn('Source file "'+ newfilepath + '" not found.');
+                grunt.log.warn('Source file "'+ srcfilepath + '" not found.');
                 return false;
 
             }
@@ -49,18 +53,19 @@ module.exports = function(grunt) {
         });
 
     }
+    //make zip package
+    var makeZip=function(newFileDir){
+        console.log(newFileDir,'newFileDir')
+        zip.file(newFileDir,'hello there');
+        var data=zip.generate({base64:false,compression:'DEFLATE'});
 
+        var perPath=path.resolve(newFileDir,'../');
+
+       var statu= fs.writeFileSync(path.join(perPath,'name.zip'),data,'binary');
+       console.log(statu,'=-=-=')
+    }
 
   grunt.registerMultiTask('file_package', 'files automatic package tools', function(arg1,arg2) {
-    // grunt.log.write(this,'=-=-=-=-=-');
-    // console.log(this);
-    // if(arguments.length === 0){
-    //   grunt.log.writeln(this.name + ", no args");
-    // }else{
-    //   grunt.log.writeln(this.name,arg1,arg2);
-    // }
-    // grunt.log.writeln(this.target,this.data,'===');
-
 
     //获取文件夹下所有文件
     var srcpath=this.data.src;
@@ -93,41 +98,12 @@ module.exports = function(grunt) {
             grunt.file.exists(newFileDir)?'':grunt.file.mkdir(newFileDir);
             
             filterFiles(filepath,newFileDir);
-            // console.log(fileContent)
+
+            //make zip
+            makeZip(newFileDir)
+
         });        
     });
-
-    // Merge task-specific and/or target-specific options with these defaults.
-    // var options = this.options({
-    //   punctuation: '.',
-    //   separator: ', '
-    // });
-
-    // // Iterate over all specified file groups.
-    // this.files.forEach(function(f) {
-    //   // Concat specified files.
-    //   var src = f.src.filter(function(filepath) {
-    //     // Warn on and remove invalid source files (if nonull was set).
-    //     if (!grunt.file.exists(filepath)) {
-    //       grunt.log.warn('Source file "' + filepath + '" not found.');
-    //       return false;
-    //     } else {
-    //       return true;
-    //     }
-    //   }).map(function(filepath) {
-    //     // Read file source.
-    //     return grunt.file.read(filepath);
-    //   }).join(grunt.util.normalizelf(options.separator));
-
-    //   // Handle options.
-    //   src += options.punctuation;
-
-    //   // Write the destination file.
-    //   grunt.file.write(f.dest, src);
-
-    //   // Print a success message.
-    //   grunt.log.writeln('File "' + f.dest + '" created.');
-    // });
 
   });
 
