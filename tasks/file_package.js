@@ -10,7 +10,7 @@
 
 var path=require('path');
 var fs=require('fs');
-var zip=require("node-zip")();
+var targz = require('tar.gz');
 
 module.exports = function(grunt) {
 //files automatic make package and make zip
@@ -47,22 +47,24 @@ module.exports = function(grunt) {
                 return false;
 
             }
-            
-
-            
+    
         });
 
     }
+
     //make zip package
-    var makeZip=function(newFileDir){
-        console.log(newFileDir,'newFileDir')
-        zip.file(newFileDir,'hello there');
-        var data=zip.generate({base64:false,compression:'DEFLATE'});
+    var makeZip=function(newFileDir,done){
 
         var perPath=path.resolve(newFileDir,'../');
+        //get dirfileName
+        var dirfileName=getFileName(newFileDir);
 
-       var statu= fs.writeFileSync(path.join(perPath,'name.zip'),data,'binary');
-       console.log(statu,'=-=-=')
+
+       var compress=new targz().compress(newFileDir,path.join(perPath,dirfileName+'.zip'),function(err){
+            if(err)
+                console.log('err',err)
+            done(compress);
+       })
     }
 
   grunt.registerMultiTask('file_package', 'files automatic package tools', function(arg1,arg2) {
@@ -84,6 +86,8 @@ module.exports = function(grunt) {
         grunt.file.mkdir(destpath);
     };
 
+    var done=this.async();
+
     this.files.forEach(function(f){
         var src=f.src.filter(function(filepath){
             if(!grunt.file.exists(filepath)){
@@ -100,7 +104,7 @@ module.exports = function(grunt) {
             filterFiles(filepath,newFileDir);
 
             //make zip
-            makeZip(newFileDir)
+            makeZip(newFileDir,done)
 
         });        
     });
