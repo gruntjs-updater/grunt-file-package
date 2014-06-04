@@ -14,14 +14,13 @@ module.exports = function(grunt) {
   // creation: http://gruntjs.com/creating-tasks
 
   grunt.registerMultiTask('file_package', 'files automatic package tools', function(arg1,arg2) {
-    // grunt.log.write(this,'=-=-=-=-=-');
-    // console.log(this);
-    if(arguments.length === 0){
-      grunt.log.writeln(this.name + ", no args");
-    }else{
-      grunt.log.writeln(this.name,arg1,arg2);
-    }
+
+
     grunt.log.writeln(this.target,this.data,'===');
+
+    var srcPath=this.src;
+    grunt.
+
 
     // Merge task-specific and/or target-specific options with these defaults.
     // var options = this.options({
