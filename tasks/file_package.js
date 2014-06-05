@@ -59,7 +59,6 @@ module.exports = function(grunt) {
         //get dirfileName
         var dirfileName=getFileName(newFileDir);
 
-
        var compress=new targz().compress(newFileDir,path.join(perPath,dirfileName+'.zip'),function(err){
             if(err)
                 console.log('err',err)
