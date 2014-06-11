@@ -1,13 +1,10 @@
 {
   "name": "grunt-file-package",
   "description": "files automatic package tools",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/robinma/grunt-file-package",
-  "author": {
-    "name": "robinma",
-    "email": "ahmzj@163.com",
-    "url": "http://www.robinjs.com"
-  },
+  "author": "robinma <ahmzj@163.com> (http://www.robinjs.com)",
+  "main": "index",
   "repository": {
     "type": "git",
     "url": "https://github.com/robinma/grunt-file-package.git"
@@ -28,17 +25,23 @@
     "test": "grunt test"
   },
   "devDependencies": {
-    "grunt-contrib-jshint": ">=0.10.0",
-    "grunt-contrib-clean": ">=0.5.0",
-    "grunt-contrib-nodeunit": ">=0.4.0",
     "grunt": "~0.4.5",
-    "node-zip":"~1.1.0",
-    "tar.gz":"~0.1.1"
+    "tar.gz": ">=0.1.1"
   },
   "peerDependencies": {
     "grunt": "~0.4.5"
   },
   "keywords": [
     "gruntplugin"
-  ]
+  ],
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-nodeunit": "~0.4.0",
+    "node-zip": "~1.1.0"
+  },
+  "license": "BSD"
 }

@@ -1,4 +1,0 @@
-test\js\juicer-min.js
-test\js\sea.js
-test\css\base.v2.css
-test\css\base.css

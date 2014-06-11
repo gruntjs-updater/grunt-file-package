@@ -10,7 +10,7 @@
 
 var path=require('path');
 var fs=require('fs');
-var targz = require('tar.gz');
+//var targz = require('tar.gz');
 
 module.exports = function(grunt) {
 //files automatic make package and make zip
@@ -27,21 +27,28 @@ module.exports = function(grunt) {
         //读取文件内容
         var fileContent=grunt.file.read(filepath);
         //将每行内容作为一条记录装到数组中
-        var filesArr=fileContent.split('\n');
+        var filesArr=fileContent.split(grunt.util.linefeed);
         //遍历每行文件名
         filesArr.forEach(function(filepathitem){
-            var srcfilepath=filepathitem.split('\\').join('/')
+            var srcfilepath=filepathitem.split('\\').join('\\')
             //if srcfilepath is null or empty space
             if(!srcfilepath) return false;
-
             if(grunt.file.exists(srcfilepath)){
                 grunt.log.ok('Source file "'+ srcfilepath + '" ok.');
-                var newFilePath=path.join(newFileDir,srcfilepath)
-                grunt.file.copy(srcfilepath,newFilePath,{process:function(){
-                    return true
-                }})
-             
-              
+                var newFilePath;
+                //判断文件类型
+                if(grunt.file.isDir(srcfilepath)){
+                    grunt.file.recurse(srcfilepath,function(abspath,rootdir,subdir,filename){
+                       newFilePath=path.join(newFileDir,abspath)
+                       copyFile(abspath,newFilePath);
+                       grunt.log.ok('--subdir file "'+ abspath + '"ok.');
+
+                    });
+                }else if(grunt.file.isFile(srcfilepath)){
+                    newFilePath=path.join(newFileDir,srcfilepath)
+                    copyFile(srcfilepath,newFilePath);
+                }
+
             }else{
                 grunt.log.warn('Source file "'+ srcfilepath + '" not found.');
                 return false;
@@ -50,7 +57,13 @@ module.exports = function(grunt) {
     
         });
 
-    }
+    },
+    //复制文件到指定文件夹
+    copyFile=function(srcfilepath,newFilePath){
+        grunt.file.copy(srcfilepath,newFilePath,{process:function(){
+            return true
+        }})
+    };
 
     //make zip package
     var makeZip=function(newFileDir,done){
@@ -103,7 +116,7 @@ module.exports = function(grunt) {
             filterFiles(filepath,newFileDir);
 
             //make zip
-            makeZip(newFileDir,done)
+           // makeZip(newFileDir,done)
 
         });        
     });
