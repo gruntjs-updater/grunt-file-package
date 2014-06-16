@@ -14,7 +14,9 @@ var fs=require('fs');
 
 module.exports = function(grunt) {
 //files automatic make package and make zip
-
+    var emptyline=/^\s*$/ig;
+    var dubline=/^\/\/.*$/g;
+    var sespace=/(^\s*)|(\s*$)/g;
     //get file name for path
     var getFileName=function(sp){
         //var bname=path.basename(sp);
@@ -30,6 +32,8 @@ module.exports = function(grunt) {
         var filesArr=fileContent.split(grunt.util.linefeed);
         //遍历每行文件名
         filesArr.forEach(function(filepathitem){
+            if(emptyline.test(filepathitem) || dubline.test(filepathitem)) return false;
+            filepathitem=filepathitem.replace(sespace,'');
             var srcfilepath=filepathitem.split('\\').join('\\')
             //if srcfilepath is null or empty space
             if(!srcfilepath) return false;
@@ -60,9 +64,7 @@ module.exports = function(grunt) {
     },
     //复制文件到指定文件夹
     copyFile=function(srcfilepath,newFilePath){
-        grunt.file.copy(srcfilepath,newFilePath,{process:function(){
-            return true
-        }})
+        grunt.file.copy(srcfilepath,newFilePath)
     };
 
     //make zip package
