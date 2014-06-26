@@ -80,6 +80,17 @@ module.exports = function(grunt) {
             done(compress);
        })
     }
+    //get current time strings examplate name-20140626958
+    var getCurrentTimeString=function(){
+        var date=new Date();
+        var str=date.getFullYear();
+        str+=date.getMonth()+1;
+        str+=date.getDate();
+        str+=date.getHours();
+        str+=date.getMinutes();
+        str+=date.getSeconds();
+        return str;
+    }
 
   grunt.registerMultiTask('file_package', 'files automatic package tools', function(arg1,arg2) {
 
@@ -111,8 +122,9 @@ module.exports = function(grunt) {
                 return true;
             }
         }).map(function(filepath){
-            var newpackagename=getFileName(filepath);
+            var newpackagename=getFileName(filepath)+'-'+getCurrentTimeString();
             var newFileDir=path.join(destpath,newpackagename);
+            console.log(newFileDir)
             grunt.file.exists(newFileDir)?'':grunt.file.mkdir(newFileDir);
             
             filterFiles(filepath,newFileDir);

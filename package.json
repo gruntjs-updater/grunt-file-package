@@ -1,7 +1,7 @@
 {
   "name": "grunt-file-package",
   "description": "files automatic package tools",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/robinma/grunt-file-package",
   "author": "robinma <ahmzj@163.com> (http://www.robinjs.com)",
   "main": "index",
